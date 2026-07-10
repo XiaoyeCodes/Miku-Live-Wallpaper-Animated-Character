@@ -1,0 +1,480 @@
+:root {
+  --detail-image: none;
+  --sun-x: 20%;
+  --sun-y: 10%;
+  --sun-rgb: 255, 244, 218;
+  --sun-alpha: 0.16;
+  --sun-alpha-soft: 0.07;
+  --water-alpha: 0.42;
+  --glint-alpha: 0.22;
+  --glint-low: 0.14;
+  --tide-alpha: 0.25;
+  --cloud-alpha: 0.16;
+  --cloud-near-alpha: 0.08;
+  --mist-alpha: 0.06;
+  --star-alpha: 0;
+  --vignette: 0.12;
+  --subject-alpha: 0.10;
+  --hair-alpha: 0.12;
+  --skirt-alpha: 0.08;
+  --blink-alpha: 0.9;
+  --motion-strength: 0.75;
+  --wind-seconds: 12s;
+  --skirt-seconds: 10.6s;
+  --tide-seconds: 17s;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #07162c;
+}
+
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #07162c;
+  isolation: isolate;
+}
+
+.scene-layer,
+.subject-sway,
+.hair-motion,
+.skirt-motion {
+  background-image: var(--detail-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.scene-layer {
+  position: absolute;
+  inset: -0.4%;
+  opacity: 0;
+  transform: scale(1.008);
+  will-change: opacity;
+}
+
+.sky-haze,
+.sun-bloom,
+.morning-mist,
+.cloud-field,
+.night-stars,
+.water-tide,
+.water-shimmer,
+.water-glints,
+.reflection-ripple,
+.soft-vignette,
+.subject-rig {
+  position: absolute;
+  pointer-events: none;
+}
+
+.sky-haze {
+  inset: 0;
+  z-index: 2;
+  opacity: 0.46;
+  background:
+    radial-gradient(ellipse at var(--sun-x) var(--sun-y), rgba(var(--sun-rgb), 0.16) 0%, transparent 38%),
+    linear-gradient(180deg, rgba(190, 224, 255, 0.06), transparent 55%);
+  mix-blend-mode: screen;
+}
+
+.sun-bloom {
+  inset: -12%;
+  z-index: 3;
+  background: radial-gradient(circle at var(--sun-x) var(--sun-y),
+    rgba(var(--sun-rgb), var(--sun-alpha)) 0%,
+    rgba(var(--sun-rgb), var(--sun-alpha-soft)) 20%,
+    transparent 48%);
+  mix-blend-mode: screen;
+}
+
+.cloud-field {
+  z-index: 4;
+  width: 78%;
+  height: 34%;
+  filter: blur(12px);
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(ellipse at 15% 60%, rgba(255, 255, 255, 0.28) 0 9%, transparent 25%),
+    radial-gradient(ellipse at 34% 46%, rgba(255, 255, 255, 0.22) 0 13%, transparent 31%),
+    radial-gradient(ellipse at 53% 66%, rgba(230, 247, 255, 0.18) 0 13%, transparent 32%),
+    radial-gradient(ellipse at 72% 53%, rgba(255, 255, 255, 0.16) 0 10%, transparent 28%);
+  will-change: transform;
+}
+
+.cloud-field-far {
+  top: -5%;
+  left: -64%;
+  opacity: var(--cloud-alpha);
+}
+
+.cloud-field-near {
+  top: 7%;
+  left: 72%;
+  opacity: var(--cloud-near-alpha);
+  transform: scaleX(-1);
+}
+
+.night-stars {
+  inset: 0 0 41% 0;
+  z-index: 4;
+  opacity: var(--star-alpha);
+  background:
+    radial-gradient(circle at 8% 18%, rgba(224, 242, 255, 0.9) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 22% 31%, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 47% 12%, rgba(194, 225, 255, 0.85) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 69% 25%, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 88% 15%, rgba(205, 236, 255, 0.78) 0 1px, transparent 1.8px),
+    radial-gradient(ellipse at 56% 32%, rgba(116, 174, 255, 0.15), transparent 32%);
+  mix-blend-mode: screen;
+}
+
+.morning-mist {
+  left: -8%;
+  right: -8%;
+  bottom: 13%;
+  height: 35%;
+  z-index: 5;
+  opacity: var(--mist-alpha);
+  background:
+    radial-gradient(ellipse at 18% 65%, rgba(235, 242, 255, 0.9), transparent 40%),
+    radial-gradient(ellipse at 65% 42%, rgba(255, 233, 250, 0.72), transparent 45%),
+    linear-gradient(180deg, transparent, rgba(237, 248, 255, 0.42), transparent);
+  filter: blur(18px);
+  mix-blend-mode: screen;
+}
+
+.subject-rig {
+  inset: 0;
+  z-index: 7;
+  will-change: transform;
+}
+
+.subject-sway,
+.hair-motion,
+.skirt-motion {
+  position: absolute;
+  inset: -0.4%;
+  opacity: 0;
+  transform-origin: 52% 60%;
+  will-change: transform, opacity;
+}
+
+.subject-sway {
+  z-index: 1;
+  opacity: var(--subject-alpha);
+  clip-path: polygon(4% 95%, 10% 74%, 15% 42%, 24% 20%, 35% 17%, 47% 34%, 58% 31%, 70% 13%, 84% 14%, 93% 47%, 97% 89%, 88% 99%, 17% 99%);
+  mix-blend-mode: screen;
+}
+
+.hair-motion {
+  z-index: 2;
+  opacity: var(--hair-alpha);
+  mix-blend-mode: screen;
+}
+
+.hair-left {
+  clip-path: polygon(4% 93%, 13% 76%, 16% 46%, 21% 27%, 31% 20%, 40% 30%, 37% 52%, 34% 76%, 27% 95%, 13% 98%);
+  transform-origin: 27% 31%;
+}
+
+.hair-right {
+  clip-path: polygon(40% 26%, 54% 31%, 64% 29%, 71% 16%, 82% 14%, 89% 37%, 93% 74%, 91% 98%, 78% 93%, 74% 60%, 64% 50%, 52% 48%);
+  transform-origin: 72% 24%;
+}
+
+.skirt-motion {
+  z-index: 3;
+  opacity: var(--skirt-alpha);
+  clip-path: polygon(62% 15%, 82% 13%, 90% 33%, 85% 52%, 74% 54%, 67% 40%);
+  transform-origin: 76% 23%;
+  mix-blend-mode: screen;
+}
+
+.breath-light {
+  position: absolute;
+  left: 36%;
+  top: 36%;
+  width: 27%;
+  height: 33%;
+  z-index: 4;
+  opacity: 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(230, 255, 255, 0.11), transparent 67%);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.blink {
+  position: absolute;
+  z-index: 5;
+  width: 3.55%;
+  height: 1.15%;
+  border-top: min(0.13vw, 2px) solid rgba(39, 37, 55, 0.78);
+  border-radius: 50%;
+  background: rgba(239, 189, 196, 0.52);
+  box-shadow: 0 min(-0.08vw, -1px) 0 rgba(255, 223, 221, 0.42);
+  opacity: 0;
+  transform: scaleY(0.08);
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.blink-left {
+  left: 24.5%;
+  top: 51.0%;
+  rotate: 8deg;
+}
+
+.blink-right {
+  left: 28.05%;
+  top: 45.45%;
+  rotate: -9deg;
+}
+
+.water-tide {
+  left: -10%;
+  right: -10%;
+  bottom: -5%;
+  height: 45%;
+  z-index: 8;
+  opacity: var(--tide-alpha);
+  background:
+    repeating-radial-gradient(ellipse at 42% 105%, rgba(255, 255, 255, 0.18) 0 1px, transparent 2px 28px),
+    linear-gradient(178deg, transparent 0 12%, rgba(255, 255, 255, 0.15) 18%, transparent 22% 42%, rgba(176, 242, 255, 0.10) 49%, transparent 57%);
+  filter: blur(0.7px);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.water-shimmer {
+  left: -16%;
+  right: -16%;
+  bottom: -2%;
+  height: 37%;
+  z-index: 9;
+  opacity: var(--water-alpha);
+  background:
+    linear-gradient(103deg, transparent 24%, rgba(255, 255, 255, 0.0) 38%, rgba(255, 255, 255, 0.22) 51%, rgba(255, 255, 255, 0.0) 64%, transparent 78%),
+    repeating-linear-gradient(178deg, transparent 0 18px, rgba(255, 255, 255, 0.13) 20px 22px, transparent 29px 43px);
+  filter: blur(1.2px);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.water-glints {
+  left: -12%;
+  right: -12%;
+  bottom: -1%;
+  height: 47%;
+  z-index: 10;
+  opacity: var(--glint-alpha);
+  background:
+    radial-gradient(ellipse at 22% 77%, rgba(255, 255, 255, 0.45) 0 0.55%, transparent 2%),
+    radial-gradient(ellipse at 42% 67%, rgba(255, 255, 255, 0.32) 0 0.5%, transparent 1.8%),
+    radial-gradient(ellipse at 71% 82%, rgba(255, 255, 255, 0.38) 0 0.55%, transparent 2%),
+    radial-gradient(ellipse at 86% 61%, rgba(222, 249, 255, 0.3) 0 0.48%, transparent 1.8%);
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+}
+
+.reflection-ripple {
+  left: 10%;
+  right: 7%;
+  bottom: 0;
+  height: 34%;
+  z-index: 11;
+  opacity: 0.18;
+  background: repeating-linear-gradient(178deg, transparent 0 15px, rgba(232, 250, 255, 0.22) 17px 19px, transparent 23px 37px);
+  mix-blend-mode: screen;
+  mask-image: linear-gradient(180deg, transparent, #000 38%, #000 84%, transparent);
+  will-change: transform;
+}
+
+.soft-vignette {
+  inset: 0;
+  z-index: 12;
+  background: radial-gradient(circle at center, transparent 46%, rgba(0, 9, 25, var(--vignette)) 100%);
+}
+
+.debug-panel {
+  display: none;
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 20;
+  padding: 9px 11px;
+  background: rgba(0, 0, 0, 0.46);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.92);
+  font: 13px/1.4 system-ui, sans-serif;
+}
+
+body.debug .debug-panel {
+  display: block;
+}
+
+.motion-enabled .cloud-field-far { animation: cloud-drift-far 95s linear infinite; }
+.motion-enabled .cloud-field-near { animation: cloud-drift-near 138s linear infinite; }
+.motion-enabled .night-stars { animation: star-breath 6.8s ease-in-out infinite; }
+.motion-enabled .morning-mist { animation: mist-drift 29s ease-in-out infinite alternate; }
+.motion-enabled .subject-rig { animation: subject-sway 15s ease-in-out infinite; }
+.motion-enabled .subject-sway { animation: subject-breathe 6.4s ease-in-out infinite; }
+.motion-enabled .hair-left { animation: hair-sway-left var(--wind-seconds) ease-in-out infinite; }
+.motion-enabled .hair-right { animation: hair-sway-right var(--wind-seconds) ease-in-out infinite; }
+.motion-enabled .skirt-motion { animation: skirt-sway var(--skirt-seconds) ease-in-out infinite; }
+.motion-enabled .breath-light { animation: breath-light 6.4s ease-in-out infinite; }
+.motion-enabled .blink-left { animation: blink-cycle 8.7s linear infinite; }
+.motion-enabled .blink-right { animation: blink-cycle 8.7s linear infinite 0.032s; }
+.motion-enabled .water-tide { animation: tide-flow var(--tide-seconds) ease-in-out infinite alternate; }
+.motion-enabled .water-shimmer { animation: shimmer-flow 14s ease-in-out infinite alternate; }
+.motion-enabled .water-glints { animation: glint-flow 9.5s ease-in-out infinite alternate; }
+.motion-enabled .reflection-ripple { animation: reflection-flow 11.5s ease-in-out infinite alternate; }
+
+.motion-paused *,
+.motion-paused *::before,
+.motion-paused *::after {
+  animation-play-state: paused !important;
+}
+
+@keyframes cloud-drift-far {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(260%, 4%, 0); }
+}
+
+@keyframes cloud-drift-near {
+  from { transform: scaleX(-1) translate3d(0, 0, 0); }
+  to { transform: scaleX(-1) translate3d(240%, -4%, 0); }
+}
+
+@keyframes star-breath {
+  0%, 100% { filter: brightness(0.84); }
+  50% { filter: brightness(1.28); }
+}
+
+@keyframes mist-drift {
+  from { transform: translate3d(-2.5%, 1%, 0) scale(1.02); }
+  to { transform: translate3d(3%, -1%, 0) scale(1.08); }
+}
+
+@keyframes subject-sway {
+  0%, 100% { transform: translate3d(-0.5px, 0, 0); }
+  50% { transform: translate3d(0.8px, -0.45px, 0); }
+}
+
+@keyframes subject-breathe {
+  0%, 100% { transform: scale(1); }
+  48% { transform: translate3d(0.3px, -0.55px, 0) scale(1.0016); }
+  66% { transform: translate3d(-0.15px, -0.2px, 0) scale(1.0005); }
+}
+
+@keyframes hair-sway-left {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  42% { transform: translate3d(-1.5px, 0.65px, 0) rotate(-0.18deg); }
+  72% { transform: translate3d(0.7px, -0.2px, 0) rotate(0.09deg); }
+}
+
+@keyframes hair-sway-right {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  38% { transform: translate3d(1.7px, 0.7px, 0) rotate(0.2deg); }
+  70% { transform: translate3d(-0.7px, -0.25px, 0) rotate(-0.08deg); }
+}
+
+@keyframes skirt-sway {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  45% { transform: translate3d(1.1px, 0.7px, 0) rotate(0.16deg); }
+  72% { transform: translate3d(-0.45px, 0, 0) rotate(-0.06deg); }
+}
+
+@keyframes breath-light {
+  0%, 100% { opacity: 0.018; transform: scale(0.985); }
+  48% { opacity: 0.105; transform: scale(1.035); }
+  66% { opacity: 0.045; transform: scale(1.01); }
+}
+
+@keyframes blink-cycle {
+  0%, 6%, 100% { opacity: 0; transform: scaleY(0.08); }
+  1.25%, 3.7% { opacity: var(--blink-alpha); transform: scaleY(1); }
+  2.5% { opacity: var(--blink-alpha); transform: scaleY(1.08); }
+}
+
+@keyframes tide-flow {
+  from { transform: translate3d(-2.8%, 1%, 0) scale(1.02); }
+  to { transform: translate3d(2.8%, -1.4%, 0) scale(1.06); }
+}
+
+@keyframes shimmer-flow {
+  from { transform: translate3d(-4%, 1.2%, 0); }
+  to { transform: translate3d(4%, -1.2%, 0); }
+}
+
+@keyframes glint-flow {
+  from { transform: translate3d(-2.4%, 0.8%, 0) scale(1.01); opacity: var(--glint-low); }
+  to { transform: translate3d(2.4%, -0.7%, 0) scale(1.06); opacity: var(--glint-alpha); }
+}
+
+@keyframes reflection-flow {
+  from { transform: translate3d(-1.4%, 0.8%, 0) skewX(-0.25deg); }
+  to { transform: translate3d(1.5%, -0.7%, 0) skewX(0.25deg); }
+}
+
+/* A deliberately stronger browser-only mode for inspecting every motion layer. */
+.showcase .subject-rig { animation-duration: 5.5s; }
+.showcase .subject-sway { opacity: 0.25 !important; animation-name: subject-breathe-showcase; animation-duration: 4.8s; }
+.showcase .hair-motion { opacity: 0.28 !important; }
+.showcase .skirt-motion { opacity: 0.2 !important; }
+.showcase .hair-left { animation-name: hair-showcase-left; animation-duration: 3.6s; }
+.showcase .hair-right { animation-name: hair-showcase-right; animation-duration: 3.9s; }
+.showcase .skirt-motion { animation-name: skirt-showcase; animation-duration: 3.3s; }
+.showcase .breath-light { animation-duration: 4.8s; }
+.showcase .blink-left,
+.showcase .blink-right { animation-name: blink-showcase; animation-duration: 3.2s; }
+.showcase .water-tide { animation-duration: 5.5s; }
+.showcase .water-shimmer { animation-duration: 4.8s; }
+.showcase .water-glints { animation-duration: 3.8s; }
+.showcase .reflection-ripple { animation-duration: 4.6s; }
+.showcase .cloud-field-far { animation-duration: 24s; }
+.showcase .cloud-field-near { animation-duration: 31s; }
+
+@keyframes subject-breathe-showcase {
+  0%, 100% { transform: scale(1); }
+  48% { transform: translate3d(1.5px, -2px, 0) scale(1.0045); }
+  68% { transform: translate3d(-0.7px, -0.6px, 0) scale(1.0012); }
+}
+
+@keyframes hair-showcase-left {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  42% { transform: translate3d(-5px, 2px, 0) rotate(-0.65deg); }
+  72% { transform: translate3d(2px, -0.5px, 0) rotate(0.24deg); }
+}
+
+@keyframes hair-showcase-right {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  38% { transform: translate3d(5px, 2px, 0) rotate(0.7deg); }
+  70% { transform: translate3d(-2px, -0.6px, 0) rotate(-0.25deg); }
+}
+
+@keyframes skirt-showcase {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  45% { transform: translate3d(3px, 1.6px, 0) rotate(0.55deg); }
+  72% { transform: translate3d(-1px, 0, 0) rotate(-0.2deg); }
+}
+
+@keyframes blink-showcase {
+  0%, 11%, 100% { opacity: 0; transform: scaleY(0.08); }
+  2.2%, 7.5% { opacity: 0.96; transform: scaleY(1); }
+  4.8% { opacity: 0.96; transform: scaleY(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
